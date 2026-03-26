@@ -26,10 +26,12 @@ function loadProfile() {
     try {
         profile = JSON.parse(text);
     } catch (e) {
+        // Reject invalid JSON input.
         alert("Invalid profile data.");
         return;
     }
 
+    // Basic shape check before rendering.
     if (!profile || typeof profile.username !== "string" || !Array.isArray(profile.notifications)) {
         alert("Invalid profile structure.");
         return;
@@ -45,6 +47,7 @@ function loadProfile() {
    Render Profile
 -------------------------- */
 
+
 function renderProfile(profile) {
 
     // Use textContent to avoid HTML injection.
@@ -57,6 +60,7 @@ function renderProfile(profile) {
 
         const li = document.createElement("li");
 
+        // Render each notification as plain text.
         li.textContent = n;
 
         list.appendChild(li);
@@ -86,10 +90,12 @@ function loadSession() {
         try {
             profile = JSON.parse(stored);
         } catch (e) {
+            // Stop if stored JSON is broken.
             alert("Stored session data is corrupted.");
             return;
         }
 
+        // Basic shape check for stored profile.
         if (!profile || typeof profile.username !== "string" || !Array.isArray(profile.notifications)) {
             alert("Stored session data is invalid.");
             return;

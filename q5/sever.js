@@ -47,12 +47,14 @@ app.post("/login", (req, res) => {
     // the SQL string.  The database driver transmits the values as separate
     // data — no amount of quote characters or SQL keywords in the input can
     // alter the structure of the query.
+    // placeholders prevent SQL injection.
     const query =
         "SELECT * FROM users WHERE username = ? AND password = ?"
 
     console.log("\nExecuting SQL:")
     console.log(query, [username, password])
 
+    // send user input as bound parameters.
     db.all(query, [username, password], (err, rows) => {
 
         if (err) {
