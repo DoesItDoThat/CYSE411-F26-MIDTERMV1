@@ -43,20 +43,20 @@ app.post("/login", (req, res) => {
     const username = req.body.username
     const password = req.body.password
 
+    // FIX: Use a parameterized query so user input is never interpolated into
+    // the SQL string.  The database driver transmits the values as separate
+    // data — no amount of quote characters or SQL keywords in the input can
+    // alter the structure of the query.
     const query =
-        "SELECT * FROM users WHERE username = '" +
-        username +
-        "' AND password = '" +
-        password +
-        "'"
+        "SELECT * FROM users WHERE username = ? AND password = ?"
 
     console.log("\nExecuting SQL:")
-    console.log(query)
+    console.log(query, [username, password])
 
-    db.all(query, (err, rows) => {
+    db.all(query, [username, password], (err, rows) => {
 
         if (err) {
-            return res.status(500).send("Database error")
+            return res.status(500).send("Database error") // Handle database errors
         }
 
         if (rows && rows.length > 0) {

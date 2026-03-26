@@ -21,8 +21,19 @@ function loadProfile() {
 
     const text = document.getElementById("profileInput").value;
 
-   
-    const profile = JSON.parse(text);
+    // Parse user-provided JSON.
+    let profile;
+    try {
+        profile = JSON.parse(text);
+    } catch (e) {
+        alert("Invalid profile data.");
+        return;
+    }
+
+    if (!profile || typeof profile.username !== "string" || !Array.isArray(profile.notifications)) {
+        alert("Invalid profile structure.");
+        return;
+    }
 
     currentProfile = profile;
 
@@ -36,8 +47,8 @@ function loadProfile() {
 
 function renderProfile(profile) {
 
-    
-    document.getElementById("username").innerHTML = profile.username;
+    // Use textContent to avoid HTML injection.
+    document.getElementById("username").textContent = profile.username;
 
     const list = document.getElementById("notifications");
     list.innerHTML = "";
@@ -46,8 +57,7 @@ function renderProfile(profile) {
 
         const li = document.createElement("li");
 
-        
-        li.innerHTML = n;
+        li.textContent = n;
 
         list.appendChild(li);
     }
@@ -71,7 +81,19 @@ function loadSession() {
 
     if (stored) {
 
-        const profile = JSON.parse(stored);
+        // Validate stored data before rendering.
+        let profile;
+        try {
+            profile = JSON.parse(stored);
+        } catch (e) {
+            alert("Stored session data is corrupted.");
+            return;
+        }
+
+        if (!profile || typeof profile.username !== "string" || !Array.isArray(profile.notifications)) {
+            alert("Stored session data is invalid.");
+            return;
+        }
 
         currentProfile = profile;
 
